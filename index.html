@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TOURING AMUSEMENT PARK WEBMAP</title>
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <style type="text/css">
+    #toggle-building { z-index: 1; position: fixed; top: 5px; left: 5px; }
+  </style>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  <button id="toggle-building">Toggle Buildings</button>
+  
+  <script type="module">
+    // Your access token can be found at: https://ion.cesium.com/tokens.
+    // Replace `your_access_token` with your Cesium ion access token.
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1ZGQwMTFlZS0xZDlmLTRlYWMtYmE2MC0xYTUzOWZlODg1YWIiLCJpZCI6MTgxNjgzLCJpYXQiOjE3MDI0MTQ5OTd9.Ex7MVerYQ-1blgwGrzCXQ-oJiZR_B7EWwcQIifGuSqA';
+    
+    // Keep your Cesium.Ion.defaultAccessToken = 'your_token_here' line above. 
+    // STEP 2 CODE
+    // Initialize the viewer with Cesium World Terrain.
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      terrain: Cesium.Terrain.fromWorldTerrain(),
+    });
+
+    // Fly the camera to Denver, Colorado at the given longitude, latitude, and height.
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(110.4583, -7.2805, 4000)  
+    });
+
+    // Add Cesium OSM Buildings.
+    const buildingsTileset = await Cesium.createOsmBuildingsAsync();
+    viewer.scene.primitives.add(buildingsTileset);
+    
+    // STEP 4 CODE
+    // Hide individual buildings in this area using 3D Tiles Styling language.
+    buildingsTileset.style = new Cesium.Cesium3DTileStyle({
+      // Create a style rule to control each building's "show" property.
+      show: {
+        conditions : [
+      // Any building that has this elementId will have `show = false`.
+      ['${elementId} === 949491595', false],
+      ['${elementId} === 949491590', false],
+      ['${elementId} === 949491594', false],
+      ['${elementId} === 949491593', false],
+      
+      // If a building does not have one of these elementIds, set `show = true`.
+      [true, true]
+    ]
+  },
+  // Set the default color style for this particular 3D Tileset.
+  // For any building that has a `cesium#color` property, use that color, otherwise make it white.
+  color: "Boolean(${feature['cesium#color']}) ? color(${feature['cesium#color']}) : color('#ffffff')"
+});
+    
+    // STEP 6 CODE
+    // Add the 3D Tileset you created from your Cesium ion account.
+    const Bianglala = await Cesium.Cesium3DTileset.fromIonAssetId(2388676);
+    viewer.scene.primitives.add(Bianglala);
+
+    const tribun = await Cesium.Cesium3DTileset.fromIonAssetId(2388689);
+    viewer.scene.primitives.add(tribun);
+
+    const jejogedan = await Cesium.Cesium3DTileset.fromIonAssetId(2388699);
+    viewer.scene.primitives.add(jejogedan);
+
+    const rumahhantu = await Cesium.Cesium3DTileset.fromIonAssetId(2388719);
+    viewer.scene.primitives.add(rumahhantu);
+    
+    const kapalBL = await Cesium.Cesium3DTileset.fromIonAssetId(2388753);
+    viewer.scene.primitives.add(kapalBL);
+
+    const masjid = await Cesium.Cesium3DTileset.fromIonAssetId(2388754);
+    viewer.scene.primitives.add(masjid);
+
+    const cangkir = await Cesium.Cesium3DTileset.fromIonAssetId(2388756);
+    viewer.scene.primitives.add(cangkir);
+    
+    const ayun = await Cesium.Cesium3DTileset.fromIonAssetId(2388758);
+    viewer.scene.primitives.add(ayun);
+
+    const bombomcar = await Cesium.Cesium3DTileset.fromIonAssetId(2388759);
+    viewer.scene.primitives.add(bombomcar);
+
+    const pakubumi = await Cesium.Cesium3DTileset.fromIonAssetId(2388760);
+    viewer.scene.primitives.add(pakubumi);
+    
+    const angonan = await Cesium.Cesium3DTileset.fromIonAssetId(2388763);
+    viewer.scene.primitives.add(angonan);
+
+    const likaliku = await Cesium.Cesium3DTileset.fromIonAssetId(2388765);
+    viewer.scene.primitives.add(likaliku);
+
+    const komidi = await Cesium.Cesium3DTileset.fromIonAssetId(2388766);
+    viewer.scene.primitives.add(komidi);
+    
+    const warung = await Cesium.Cesium3DTileset.fromIonAssetId(2388769);
+    viewer.scene.primitives.add(warung);
+
+    const loket = await Cesium.Cesium3DTileset.fromIonAssetId(2388902);
+    viewer.scene.primitives.add(loket);
+
+    const kedai = await Cesium.Cesium3DTileset.fromIonAssetId(2388903);
+    viewer.scene.primitives.add(kedai);
+    
+    // Move the camera to the new building.
+    viewer.flyTo(loket);
+    
+    // STEP 7 CODE
+    // Toggle the tileset's show property when the button is clicked.
+    document.querySelector('#toggle-building').onclick = function() {
+    buildingsTileset.show = !buildingsTileset.show;
+    };
+    
+    // Disable camera collision so user can't go underground
+    viewer.scene.screenSpaceCameraController.enableCollisionDetection = true;
+    
+    </script>
+  </body>
+</html>
